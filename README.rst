@@ -10,6 +10,15 @@ pretty-cron
 
 Converts crontab expressions to human-readable descriptions.
 
+Installation
+============
+
+Use pip:
+
+.. code-block:: bash
+
+    pip install pretty-cron
+
 API
 ===
 
@@ -30,9 +39,3 @@ For example:
     "At 00:00 on the 1st of January"
     >>> pretty_cron.prettify("12 15 * 1 *")
     "At 15:12 every day in January"
-
-To-do
------
-
-* Support languages other than English
-* Support ``*/2`` style expressions.

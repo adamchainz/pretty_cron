@@ -1,19 +1,21 @@
+===========
 pretty_cron
 ===========
 
 Converts crontab expressions to human-readable descriptions.
 
 API
----
+===
 
 ``prettify(cron_expression)``
+-----------------------------
 
 Converts the given string cron expression into a pretty, human-readable,
-English description of what it does.
+English description of what it means.
 
-Example:
+For example:
 
-..code-block:: python
+.. code-block:: python
 
     >>> import pretty_cron
     >>> pretty_cron.prettify("0 * * * *")
@@ -26,5 +28,5 @@ Example:
 To-do
 -----
 
-* Support other languages
+* Support languages other than English
 * Support ``*/2`` style expressions.

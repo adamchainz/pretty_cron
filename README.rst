@@ -1,5 +1,5 @@
 ===========
-pretty_cron
+pretty-cron
 ===========
 
 Converts crontab expressions to human-readable descriptions.

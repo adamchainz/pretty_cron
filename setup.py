@@ -53,13 +53,13 @@ with open('HISTORY.rst') as history_file:
 
 
 setup(
-    name='pretty_cron',
+    name='pretty-cron',
     version=version,
     description="Converts crontab expressions to human-readable descriptions.",
     long_description=readme + '\n\n' + history,
     author="Adam Johnson",
     author_email='me@adamj.eu',
-    url='https://github.com/adamchainz/pretty_cron',
+    url='https://github.com/adamchainz/pretty-cron',
     packages=get_packages('pretty_cron'),
     include_package_data=True,
     install_requires=[],

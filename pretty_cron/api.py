@@ -1,60 +1,25 @@
 import datetime
 
 
-_WEEKDAYS = {
-    0: "Sunday",
-    1: "Monday",
-    2: "Tuesday",
-    3: "Wednesday",
-    4: "Thursday",
-    5: "Friday",
-    6: "Saturday",
-}
-
-_ORDINAL_SUFFIXES = {
-    1: 'st',
-    2: 'nd',
-    3: 'rd'
-}
-
-
-def _ordinal(n):
-    if 10 <= (n % 100) < 20:
-        suffix = 'th'
-    else:
-        suffix = _ORDINAL_SUFFIXES.get(n % 10, 'th')
-
-    return str(n) + suffix
-
-
-def _human_week_day(day):
-    return _WEEKDAYS.get(day)
-
-
-def _human_month(month):
-    return datetime.date(2014, month, 1).strftime("%B")
-
-
-def _pretty_time(minute, hour):
-    if minute != "*" and hour != "*":
-        the_time = datetime.time(hour=hour, minute=minute)
-        pretty_time = "At {0}".format(the_time.strftime("%H:%M"))
-
-    elif minute != "*" and hour == '*':
-        pretty_time = "At {0} minutes past every hour of".format(minute)
-
-    elif minute == "*" and hour != '*':
-        start_time = datetime.time(hour=hour)
-        end_time = datetime.time(hour=hour, minute=59)
-
-        pretty_time = "Every minute between {0} and {1}".format(
-            start_time.strftime("%H:%M"),
-            end_time.strftime("%H:%M"),
+def prettify(expression):
+    try:
+        expression = map(
+            lambda c: int(c) if c != "*" else c,
+            expression.split(" ")
         )
-    else:
-        pretty_time = "Every minute of"
+    except ValueError:
+        # */2 and other cron expressions aren't supported yet
+        return expression
 
-    return pretty_time
+    try:
+        minute, hour, month_day, month, week_day = expression
+    except ValueError:
+        raise ValueError("Invalid cron expression")
+
+    date = _pretty_date(month_day, month, week_day)
+    time = _pretty_time(minute, hour)
+
+    return " ".join(c for c in [time, date] if c)
 
 
 def _pretty_date(month_day, month, week_day):
@@ -94,22 +59,58 @@ def _pretty_date(month_day, month, week_day):
     return pretty_date
 
 
-def prettify(expression):
-    try:
-        expression = map(
-            lambda c: int(c) if c != "*" else c,
-            expression.split(" ")
+def _human_month(month):
+    return datetime.date(2014, month, 1).strftime("%B")
+
+
+_WEEKDAYS = {
+    0: "Sunday",
+    1: "Monday",
+    2: "Tuesday",
+    3: "Wednesday",
+    4: "Thursday",
+    5: "Friday",
+    6: "Saturday",
+}
+
+
+def _human_week_day(day):
+    return _WEEKDAYS.get(day)
+
+
+_ORDINAL_SUFFIXES = {
+    1: 'st',
+    2: 'nd',
+    3: 'rd'
+}
+
+
+def _ordinal(n):
+    if 10 <= (n % 100) < 20:
+        suffix = 'th'
+    else:
+        suffix = _ORDINAL_SUFFIXES.get(n % 10, 'th')
+
+    return str(n) + suffix
+
+
+def _pretty_time(minute, hour):
+    if minute != "*" and hour != "*":
+        the_time = datetime.time(hour=hour, minute=minute)
+        pretty_time = "At {0}".format(the_time.strftime("%H:%M"))
+
+    elif minute != "*" and hour == '*':
+        pretty_time = "At {0} minutes past every hour of".format(minute)
+
+    elif minute == "*" and hour != '*':
+        start_time = datetime.time(hour=hour)
+        end_time = datetime.time(hour=hour, minute=59)
+
+        pretty_time = "Every minute between {0} and {1}".format(
+            start_time.strftime("%H:%M"),
+            end_time.strftime("%H:%M"),
         )
-    except ValueError:
-        # */2 and other cron expressions aren't supported yet
-        return expression
+    else:
+        pretty_time = "Every minute of"
 
-    try:
-        minute, hour, month_day, month, week_day = expression
-    except ValueError:
-        raise ValueError("Invalid cron expression")
-
-    time = _pretty_time(minute, hour)
-    date = _pretty_date(month_day, month, week_day)
-
-    return " ".join(c for c in [time, date] if c)
+    return pretty_time

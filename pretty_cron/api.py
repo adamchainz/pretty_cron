@@ -2,17 +2,19 @@ import datetime
 
 
 def prettify(expression):
-    try:
-        expression = map(
-            lambda c: int(c) if c != "*" else c,
-            expression.split(" ")
-        )
-    except ValueError:
-        # */2 and other cron expressions aren't supported yet
-        return expression
+    pieces = []
+    for piece in expression.split(" "):
+        if piece != "*":
+            try:
+                piece = int(piece)
+            except ValueError:
+                # */2 and other cron expressions aren't supported yet - return
+                # as-is
+                return expression
+        pieces.append(piece)
 
     try:
-        minute, hour, month_day, month, week_day = expression
+        minute, hour, month_day, month, week_day = pieces
     except ValueError:
         raise ValueError("Invalid cron expression")
 

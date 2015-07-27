@@ -50,6 +50,3 @@ class PrettyCronTest(unittest.TestCase):
 
     def test_unsupported(self):
         self.assertEqual(prettify("* */6 * * *"), "* */6 * * *")
-
-if __name__ == '__main__':
-    unittest.main()

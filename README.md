@@ -1,4 +1,4 @@
-# prettycron
+# pretty_cron
 
 Provides a human-readable format for cron expressions.
 

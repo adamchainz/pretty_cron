@@ -2,6 +2,12 @@
 pretty-cron
 ===========
 
+.. image:: https://img.shields.io/travis/adamchainz/pretty-cron.svg
+        :target: https://travis-ci.org/adamchainz/pretty-cron
+
+.. image:: https://img.shields.io/pypi/v/pretty-cron.svg
+        :target: https://pypi.python.org/pypi/pretty-cron
+
 Converts crontab expressions to human-readable descriptions.
 
 API

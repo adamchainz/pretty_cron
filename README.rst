@@ -23,7 +23,7 @@ API
 ===
 
 ``prettify_cron(cron_expression)``
------------------------------
+----------------------------------
 
 Converts the given string cron expression into a pretty, human-readable,
 English description of what it means. If the string is not a valid cron

@@ -1,7 +1,7 @@
 import datetime
 
 
-def prettify(expression):
+def prettify_cron(expression):
     pieces = []
     for piece in expression.split(" "):
         if piece != "*":

@@ -1,0 +1,13 @@
+# Config file for automatic testing at travis-ci.org
+
+language: python
+
+notifications:
+  email: false
+
+language: python
+
+install:
+  - pip install tox
+
+script: tox

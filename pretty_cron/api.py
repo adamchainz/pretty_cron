@@ -16,12 +16,15 @@ def prettify(expression):
     try:
         minute, hour, month_day, month, week_day = pieces
     except ValueError:
-        raise ValueError("Invalid cron expression")
+        # More or fewer pieces than expected - return as-is
+        return expression
 
     date = _pretty_date(month_day, month, week_day)
     time = _pretty_time(minute, hour)
 
-    return " ".join(c for c in [time, date] if c)
+    return " ".join(
+        filter(None, (time, date))
+    )
 
 
 def _pretty_date(month_day, month, week_day):
@@ -55,7 +58,7 @@ def _pretty_date(month_day, month, week_day):
             )
 
         pretty_date = " and ".join(
-            c for c in [month_day_date, week_day_date] if c
+            filter(None, (month_day_date, week_day_date))
         )
 
     return pretty_date
@@ -77,7 +80,7 @@ _WEEKDAYS = {
 
 
 def _human_week_day(day):
-    return _WEEKDAYS.get(day)
+    return _WEEKDAYS[day]
 
 
 _ORDINAL_SUFFIXES = {

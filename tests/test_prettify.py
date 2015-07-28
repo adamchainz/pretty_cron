@@ -12,6 +12,18 @@ class PrettyCronTest(unittest.TestCase):
         self.assertEqual(prettify("0 0 1 * *"),
                          "At 00:00 on the 1st of every month")
 
+    def test_one_day_in_month_2nd(self):
+        self.assertEqual(prettify("0 0 2 * *"),
+                         "At 00:00 on the 2nd of every month")
+
+    def test_one_day_in_month_11th(self):
+        self.assertEqual(prettify("0 0 11 * *"),
+                         "At 00:00 on the 11th of every month")
+
+    def test_one_day_in_month_21st(self):
+        self.assertEqual(prettify("0 0 21 * *"),
+                         "At 00:00 on the 21st of every month")
+
     def test_every_day_in_month(self):
         self.assertEqual(prettify("12 15 * 1 *"),
                          "At 15:12 every day in January")
@@ -50,3 +62,6 @@ class PrettyCronTest(unittest.TestCase):
 
     def test_unsupported(self):
         self.assertEqual(prettify("* */6 * * *"), "* */6 * * *")
+
+    def test_invalid(self):
+        self.assertEqual(prettify('* * * * * *'), '* * * * * *')

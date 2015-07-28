@@ -42,8 +42,10 @@ test:
 test-all:
 	tox
 
-coverage:
-	coverage run --source pretty_cron setup.py test
+coverage: clean-pyc
+	coverage erase
+	tox $(tox_args)
+	coverage combine
 	coverage report -m
 	coverage html
 	open htmlcov/index.html

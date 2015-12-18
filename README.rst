@@ -2,7 +2,7 @@
 pretty-cron
 ===========
 
-.. image:: https://img.shields.io/travis/adamchainz/pretty-cron.svg
+.. image:: https://img.shields.io/travis/adamchainz/pretty-cron/master.svg
         :target: https://travis-ci.org/adamchainz/pretty-cron
 
 .. image:: https://img.shields.io/pypi/v/pretty-cron.svg

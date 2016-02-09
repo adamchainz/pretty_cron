@@ -51,7 +51,7 @@ def _pretty_date(month_day, month, week_day):
             week_day_date = ""
 
         if month_day_date:
-            if month != '*' and not (type(month)==tuple):
+            if month != '*':
                 month_day_date += " of {0}".format(_human_month(month))
             else:
                 month_day_date += " of every month"

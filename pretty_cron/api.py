@@ -39,8 +39,6 @@ def _pretty_date(month_day, month, week_day):
 
         if month != '*' and not (type(month)==tuple):
             pretty_date += " in {0}".format(_human_month(month))
-        elif type(month)==tuple:
-            print("DANGER")
     else:
         if month_day != "*":
             month_day_date = "on the {0}".format(_ordinal(month_day))
@@ -55,8 +53,6 @@ def _pretty_date(month_day, month, week_day):
         if month_day_date:
             if month != '*' and not (type(month)==tuple):
                 month_day_date += " of {0}".format(_human_month(month))
-            elif type(month)==tuple:
-                print("DANGER")
             else:
                 month_day_date += " of every month"
 
@@ -76,7 +72,10 @@ def _pretty_date(month_day, month, week_day):
 def _human_month(month):
     if type(month)==tuple:
         months = [datetime.date(2014, m, 1).strftime("%B") for m in month]
-        return " and ".join(months)
+        *rest, last, two = months
+        if rest:
+            return ", ".join(rest) + ", {} and {}".format(last, two)
+        return "{} and {}".format(last, two)
     return datetime.date(2014, month, 1).strftime("%B")
 
 

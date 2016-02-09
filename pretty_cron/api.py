@@ -3,8 +3,15 @@ import datetime
 
 def prettify_cron(expression):
     pieces = []
-    for piece in expression.split(" "):
-        if piece != "*":
+    for i, piece in enumerate(expression.split(" ")):
+        if i == 3 and ',' in piece:  # support comma-separated values for month
+            try:
+                piece = tuple(int(p) for p in piece.split(','))
+            except ValueError:
+                # non-integers in comma-separated list aren't supported yet -
+                # return as-is
+                return expression
+        elif piece != '*':
             try:
                 piece = int(piece)
             except ValueError:
@@ -46,7 +53,7 @@ def _pretty_date(month_day, month, week_day):
             week_day_date = ""
 
         if month_day_date:
-            if month != "*":
+            if month != '*':
                 month_day_date += " of {0}".format(_human_month(month))
             else:
                 month_day_date += " of every month"
@@ -65,7 +72,25 @@ def _pretty_date(month_day, month, week_day):
 
 
 def _human_month(month):
-    return datetime.date(2014, month, 1).strftime("%B")
+    if isinstance(month, tuple):
+        months = month
+    else:
+        months = (month,)
+
+    return _human_list([
+        datetime.date(2014, m, 1).strftime('%B')
+        for m in months
+    ])
+
+
+def _human_list(listy):
+    if len(listy) == 1:
+        return listy[0]
+
+    rest, penultimate, ultimate = listy[:-2], listy[-2], listy[-1]
+    if rest:
+        return ", ".join(rest) + ", {} and {}".format(penultimate, ultimate)
+    return "{} and {}".format(penultimate, ultimate)
 
 
 _WEEKDAYS = {

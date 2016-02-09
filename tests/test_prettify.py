@@ -22,8 +22,26 @@ class PrettyCronTest(unittest.TestCase):
     def test_every_day_in_month(self):
         assert pc("12 15 * 1 *") == "At 15:12 every day in January"
 
+    def test_every_day_in_months(self):
+        assert (
+            pc("12 15 * 1,12 *") ==
+            "At 15:12 every day in January and December"
+        )
+
     def test_every_specific_day_in_month(self):
         assert pc("0 0 * 1 1") == "At 00:00 on every Monday in January"
+
+    def test_every_specific_day_in_months(self):
+        assert (
+            pc("0 0 * 1,2 1") ==
+            "At 00:00 on every Monday in January and February"
+        )
+
+    def test_every_specific_day_in_months_and_then_more(self):
+        assert (
+            pc("0 0 * 1,2,4,5 1") ==
+            "At 00:00 on every Monday in January, February, April and May"
+        )
 
     def test_weekly(self):
         assert pc("0 0 * * 0") == "At 00:00 every Sunday"
@@ -41,6 +59,20 @@ class PrettyCronTest(unittest.TestCase):
         assert (
             pc("0 0 1 1 1") ==
             "At 00:00 on the 1st of January and on every Monday in January"
+        )
+
+    def test_every_specific_day_in_months_and_weekly(self):
+        assert (
+            pc("0 0 1 1,2 1") ==
+            "At 00:00 on the 1st of January and February and on every Monday "
+            "in January and February"
+        )
+
+    def test_every_specific_day_in_months_and_more_and_weekly(self):
+        assert (
+            pc("0 0 1 1,2,3 1") ==
+            "At 00:00 on the 1st of January, February and March and on every "
+            "Monday in January, February and March"
         )
 
     def test_daily(self):

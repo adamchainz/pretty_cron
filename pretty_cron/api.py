@@ -4,21 +4,26 @@ import datetime
 def prettify_cron(expression):
     pieces = []
     for piece in expression.split(" "):
-        if piece != "*":
+        if piece != "*" and "," not in piece:
             try:
                 piece = int(piece)
             except ValueError:
                 # */2 and other cron expressions aren't supported yet - return
                 # as-is
                 return expression
+        elif "," in piece:
+            splitter = piece.split(",")
+            try:
+                splitter = [int(p) for p in splitter]
+            except ValueError:
+                return expression
+            piece = tuple(splitter)
         pieces.append(piece)
-
     try:
         minute, hour, month_day, month, week_day = pieces
     except ValueError:
         # More or fewer pieces than expected - return as-is
         return expression
-
     date = _pretty_date(month_day, month, week_day)
     time = _pretty_time(minute, hour)
 
@@ -32,8 +37,10 @@ def _pretty_date(month_day, month, week_day):
     if month_day == "*" and week_day == "*":
         pretty_date = "every day"
 
-        if month != '*':
+        if month != '*' and not (type(month)==tuple):
             pretty_date += " in {0}".format(_human_month(month))
+        elif type(month)==tuple:
+            print("DANGER")
     else:
         if month_day != "*":
             month_day_date = "on the {0}".format(_ordinal(month_day))
@@ -46,8 +53,10 @@ def _pretty_date(month_day, month, week_day):
             week_day_date = ""
 
         if month_day_date:
-            if month != "*":
+            if month != '*' and not (type(month)==tuple):
                 month_day_date += " of {0}".format(_human_month(month))
+            elif type(month)==tuple:
+                print("DANGER")
             else:
                 month_day_date += " of every month"
 
@@ -65,6 +74,9 @@ def _pretty_date(month_day, month, week_day):
 
 
 def _human_month(month):
+    if type(month)==tuple:
+        months = [datetime.date(2014, m, 1).strftime("%B") for m in month]
+        return " and ".join(months)
     return datetime.date(2014, month, 1).strftime("%B")
 
 

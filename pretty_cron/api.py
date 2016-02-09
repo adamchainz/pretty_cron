@@ -70,7 +70,7 @@ def _pretty_date(month_day, month, week_day):
 
 
 def _human_month(month):
-    if type(month)==tuple:
+    if isinstance(month, tuple):
         months = [datetime.date(2014, m, 1).strftime("%B") for m in month]
         rest, last, two = months[:-2],months[-2],months[-1]
         if rest:

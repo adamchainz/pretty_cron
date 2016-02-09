@@ -15,4 +15,4 @@ Originally created by Ben Davis at https://github.com/ben-davis/prettycron .
 Contributors
 ------------
 
-* MIke Readhead <github@0xdb.co.uk>
+* Mike Readhead <github@0xdb.co.uk>

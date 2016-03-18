@@ -1,4 +1,4 @@
 coverage
-pytest==2.8.7
+pytest==2.9.0
 twine
 wheel

@@ -1,10 +1,24 @@
+# -*- coding: utf-8 -*-
+"""
+.. module:: pretty-cron.api.py
+   :synopsis: Human readable cron-tab
+
+.. rewriter:: Julio Bondia (julio.bondia@therealbuzzgroup.com)
+   :source code: https://github.com/adamchainz/pretty-cron
+   :modification: Acceptation of comma separated weekdays, ordinal
+                  days and months
+"""
 import datetime
 
 
 def prettify_cron(expression):
+    """
+    Returns human readable cron-tab configuration
+    """
     pieces = []
-    for i, piece in enumerate(expression.split(" ")):
-        if i == 3 and ',' in piece:  # support comma-separated values for month
+    for piece in expression.split(" "):
+        # support comma-separated values for ordinal days, weekdays and months
+        if ',' in piece:
             try:
                 piece = tuple(int(p) for p in piece.split(','))
             except ValueError:
@@ -21,7 +35,9 @@ def prettify_cron(expression):
         pieces.append(piece)
 
     try:
+        # pylint: disable=W0632
         minute, hour, month_day, month, week_day = pieces
+        # pylint: enable=W0632
     except ValueError:
         # More or fewer pieces than expected - return as-is
         return expression
@@ -29,13 +45,18 @@ def prettify_cron(expression):
     date = _pretty_date(month_day, month, week_day)
     time = _pretty_time(minute, hour)
 
+    # pylint does not like builtin funcitons
     return " ".join(
+        # pylint: disable=W0141
         filter(None, (time, date))
+        # pylint: enable=W0141
     )
 
 
 def _pretty_date(month_day, month, week_day):
-
+    """
+    Parses the received configuration into human readable text
+    """
     if month_day == "*" and week_day == "*":
         pretty_date = "every day"
 
@@ -65,13 +86,18 @@ def _pretty_date(month_day, month, week_day):
             )
 
         pretty_date = " and ".join(
+            # pylint: disable=W0141
             filter(None, (month_day_date, week_day_date))
+            # pylint: enable=W0141
         )
 
     return pretty_date
 
 
 def _human_month(month):
+    """
+    Cron-tab to month
+    """
     if isinstance(month, tuple):
         months = month
     else:
@@ -84,6 +110,9 @@ def _human_month(month):
 
 
 def _human_list(listy):
+    """
+    Returns the sentence allowing days and months in comma separated values
+    """
     if len(listy) == 1:
         return listy[0]
 
@@ -106,7 +135,17 @@ _WEEKDAYS = {
 
 
 def _human_week_day(day):
-    return _WEEKDAYS[day]
+    """
+    Cron-tab to weekday
+    """
+    if isinstance(day, tuple):
+        days = day
+    else:
+        days = (day,)
+
+    return _human_list([
+        _WEEKDAYS[d] for d in days
+    ])
 
 
 _ORDINAL_SUFFIXES = {
@@ -117,15 +156,29 @@ _ORDINAL_SUFFIXES = {
 
 
 def _ordinal(n):
-    if 10 <= (n % 100) < 20:
-        suffix = 'th'
+    """
+    Cron-tab to numeric day
+    """
+    if isinstance(n, tuple):
+        n = n
     else:
-        suffix = _ORDINAL_SUFFIXES.get(n % 10, 'th')
+        n = (n,)
 
-    return str(n) + suffix
+    ordinal_days = []
+    for d in n:
+        if 10 <= (d % 100) < 20:
+            suffix = 'th'
+        else:
+            suffix = _ORDINAL_SUFFIXES.get(d % 10, 'th')
+        ordinal_days.append(str(d) + suffix)
+
+    return _human_list(ordinal_days)
 
 
 def _pretty_time(minute, hour):
+    """
+    Cron-tab to time
+    """
     if minute != "*" and hour != "*":
         the_time = datetime.time(hour=hour, minute=minute)
         pretty_time = "At {0}".format(the_time.strftime("%H:%M"))

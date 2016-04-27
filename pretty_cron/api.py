@@ -26,9 +26,7 @@ def prettify_cron(expression):
         pieces.append(piece)
 
     try:
-        # pylint: disable=W0632
         minute, hour, month_day, month, week_day = pieces
-        # pylint: enable=W0632
     except ValueError:
         # More or fewer pieces than expected - return as-is
         return expression
@@ -36,11 +34,8 @@ def prettify_cron(expression):
     date = _pretty_date(month_day, month, week_day)
     time = _pretty_time(minute, hour)
 
-    # pylint does not like builtin funcitons
     return " ".join(
-        # pylint: disable=W0141
         filter(None, (time, date))
-        # pylint: enable=W0141
     )
 
 

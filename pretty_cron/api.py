@@ -7,9 +7,9 @@ def prettify_cron(expression):
     Returns human readable cron-tab configuration
     """
     pieces = []
-    for piece in expression.split(" "):
+    for i, piece in enumerate(expression.split(" ")):
         # support comma-separated values for ordinal days, weekdays and months
-        if ',' in piece:
+        if i != 0 and ',' in piece:
             try:
                 piece = tuple(int(p) for p in piece.split(','))
             except ValueError:
@@ -79,23 +79,19 @@ def _pretty_date(month_day, month, week_day):
 
 
 def _human_month(month):
-    """
-    Cron-tab to month
-    """
-    if isinstance(month, tuple):
-        months = month
-    else:
-        months = (month,)
+    if not isinstance(month, tuple):
+        month = (month,)
 
     return _human_list([
         datetime.date(2014, m, 1).strftime('%B')
-        for m in months
+        for m in month
     ])
 
 
 def _human_list(listy):
     """
-    Returns the sentence allowing days and months in comma separated values
+    Returns the sentence allowing days (week and ordinal) and months
+    in comma separated values
     """
     if len(listy) == 1:
         return listy[0]
@@ -119,16 +115,11 @@ _WEEKDAYS = {
 
 
 def _human_week_day(day):
-    """
-    Cron-tab to weekday
-    """
-    if isinstance(day, tuple):
-        days = day
-    else:
-        days = (day,)
+    if not isinstance(day, tuple):
+        day = (day,)
 
     return _human_list([
-        _WEEKDAYS[d] for d in days
+        _WEEKDAYS[d] for d in day
     ])
 
 
@@ -140,12 +131,7 @@ _ORDINAL_SUFFIXES = {
 
 
 def _ordinal(n):
-    """
-    Cron-tab to numeric day
-    """
-    if isinstance(n, tuple):
-        n = n
-    else:
+    if not isinstance(n, tuple):
         n = (n,)
 
     ordinal_days = []
@@ -160,9 +146,6 @@ def _ordinal(n):
 
 
 def _pretty_time(minute, hour):
-    """
-    Cron-tab to time
-    """
     if minute != "*" and hour != "*":
         the_time = datetime.time(hour=hour, minute=minute)
         pretty_time = "At {0}".format(the_time.strftime("%H:%M"))

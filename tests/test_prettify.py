@@ -31,6 +31,18 @@ class PrettyCronTest(unittest.TestCase):
     def test_every_specific_day_in_month(self):
         assert pc("0 0 * 1 1") == "At 00:00 on every Monday in January"
 
+    def test_every_pair_of_days_in_month(self):
+        assert (
+            pc("0 0 * 1 1,2") ==
+            "At 00:00 on every Monday and Tuesday in January"
+        )
+
+    def test_every_three_days_in_month(self):
+        assert (
+            pc("0 0 * 1 1,2,3") ==
+            "At 00:00 on every Monday, Tuesday and Wednesday in January"
+        )
+
     def test_every_specific_day_in_months(self):
         assert (
             pc("0 0 * 1,2 1") ==
@@ -41,6 +53,13 @@ class PrettyCronTest(unittest.TestCase):
         assert (
             pc("0 0 * 1,2,4,5 1") ==
             "At 00:00 on every Monday in January, February, April and May"
+        )
+
+    def test_every_multiple_days_in_multiple_months(self):
+        assert (
+            pc("0 0 * 1,2,4,5 1,2,3") ==
+            "At 00:00 on every Monday, Tuesday and Wednesday "
+            "in January, February, April and May"
         )
 
     def test_weekly(self):
@@ -66,6 +85,34 @@ class PrettyCronTest(unittest.TestCase):
             pc("0 0 1 1,2 1") ==
             "At 00:00 on the 1st of January and February and on every Monday "
             "in January and February"
+        )
+
+    def test_every_pair_of_days_in_multiple_months_and_weekly(self):
+        assert (
+            pc("0 0 1,23 1,2 1") ==
+            "At 00:00 on the 1st and 23rd of January and February and on "
+            "every Monday in January and February"
+        )
+
+    def test_every_pair_of_days_in_multiple_months_and_twice_weekly(self):
+        assert (
+            pc("0 0 1,23 1,2 1,4") ==
+            "At 00:00 on the 1st and 23rd of January and February and on "
+            "every Monday and Thursday in January and February"
+        )
+
+    def test_every_pair_of_days_in_multiple_months_and_three_days_weekly(self):
+        assert (
+            pc("0 0 1,23 1,2 1,4,6") ==
+            "At 00:00 on the 1st and 23rd of January and February and on "
+            "every Monday, Thursday and Saturday in January and February"
+        )
+
+    def test_every_multiple_days_in_multiple_months_and_weekly(self):
+        assert (
+            pc("0 0 1,2,3,4 1,2 1") ==
+            "At 00:00 on the 1st, 2nd, 3rd and 4th of January and February "
+            "and on every Monday in January and February"
         )
 
     def test_every_specific_day_in_months_and_more_and_weekly(self):

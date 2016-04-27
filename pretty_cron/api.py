@@ -1,10 +1,18 @@
+# -*- coding: utf-8 -*-
 import datetime
 
 
 def prettify_cron(expression):
+    """
+    Converts the given string cron expression into a pretty, human-readable,
+    English description of what it means. If the string is not a valid cron
+    expression, or it includes features not currently supported, it is returned
+    as-is.
+    """
     pieces = []
     for i, piece in enumerate(expression.split(" ")):
-        if i == 3 and ',' in piece:  # support comma-separated values for month
+        # support comma-separated values for ordinal days, weekdays and months
+        if i in (2, 3, 4) and ',' in piece:
             try:
                 piece = tuple(int(p) for p in piece.split(','))
             except ValueError:
@@ -35,7 +43,6 @@ def prettify_cron(expression):
 
 
 def _pretty_date(month_day, month, week_day):
-
     if month_day == "*" and week_day == "*":
         pretty_date = "every day"
 
@@ -84,6 +91,16 @@ def _human_month(month):
 
 
 def _human_list(listy):
+    """
+    Combines a list of strings into a string representing the list in plain
+    English, i.e.
+    >>> _human_list(["a"])
+    "a"
+    >>> _human_list(["a", "b"])
+    "a and b"
+    >>> _human_list(["a", "b", "c"])
+    "a, b and c"
+    """
     if len(listy) == 1:
         return listy[0]
 
@@ -106,7 +123,12 @@ _WEEKDAYS = {
 
 
 def _human_week_day(day):
-    return _WEEKDAYS[day]
+    if isinstance(day, tuple):
+        days = day
+    else:
+        days = (day,)
+
+    return _human_list([_WEEKDAYS[d] for d in days])
 
 
 _ORDINAL_SUFFIXES = {
@@ -116,13 +138,21 @@ _ORDINAL_SUFFIXES = {
 }
 
 
-def _ordinal(n):
-    if 10 <= (n % 100) < 20:
-        suffix = 'th'
+def _ordinal(num):
+    if isinstance(num, tuple):
+        nums = num
     else:
-        suffix = _ORDINAL_SUFFIXES.get(n % 10, 'th')
+        nums = (num,)
 
-    return str(n) + suffix
+    ordinal_days = []
+    for d in nums:
+        if 10 <= (d % 100) < 20:
+            suffix = 'th'
+        else:
+            suffix = _ORDINAL_SUFFIXES.get(d % 10, 'th')
+        ordinal_days.append(str(d) + suffix)
+
+    return _human_list(ordinal_days)
 
 
 def _pretty_time(minute, hour):

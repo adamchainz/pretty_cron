@@ -8,9 +8,6 @@ Pending Release
 
 * New release notes here
 
-1.0.2 (2016-04-27)
-------------------
-
 * Now supports expressions with multiple weekdays and ordinal days.
 
 1.0.1 (2016-02-09)

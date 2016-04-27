@@ -72,9 +72,7 @@ def _pretty_date(month_day, month, week_day):
             )
 
         pretty_date = " and ".join(
-            # pylint: disable=W0141
             filter(None, (month_day_date, week_day_date))
-            # pylint: enable=W0141
         )
 
     return pretty_date

@@ -1,13 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-.. module:: pretty-cron.api.py
-   :synopsis: Human readable cron-tab
-
-.. rewriter:: Julio Bondia (julio.bondia@therealbuzzgroup.com)
-   :source code: https://github.com/adamchainz/pretty-cron
-   :modification: Acceptation of comma separated weekdays, ordinal
-                  days and months
-"""
 import datetime
 
 

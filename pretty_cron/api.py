@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import datetime
 
 
@@ -38,7 +40,7 @@ def prettify_cron(expression):
     time = _pretty_time(minute, hour)
 
     return " ".join(
-        filter(None, (time, date))
+        x for x in (time, date) if x
     )
 
 
@@ -72,7 +74,7 @@ def _pretty_date(month_day, month, week_day):
             )
 
         pretty_date = " and ".join(
-            filter(None, (month_day_date, week_day_date))
+            x for x in (month_day_date, week_day_date) if x
         )
 
     return pretty_date

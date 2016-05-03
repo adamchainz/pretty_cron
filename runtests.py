@@ -6,6 +6,7 @@ import subprocess
 import sys
 
 import pytest
+import six
 from flake8.main import main as flake8_main
 from libmodernize.main import main as libmodernize_main
 
@@ -68,8 +69,19 @@ def run_flake8():
 
 def run_modernize():
     print('Running modernize checks')
-    ret = libmodernize_main(CODE_PATHS)
-    print('libmodernize failed' if ret else 'libmodernize passed')
+    try:
+        orig_stdout = getattr(sys, 'stdout')
+        out = six.StringIO()
+        setattr(sys, 'stdout', out)
+        libmodernize_main([
+            '-x', 'lib2to3.fixes.fix_has_key'
+        ] + CODE_PATHS)
+    finally:
+        sys.stdout = orig_stdout
+    output = out.getvalue()
+    print(output)
+    ret = len(output)
+    print('modernize failed' if ret else 'modernize passed')
     return ret
 
 

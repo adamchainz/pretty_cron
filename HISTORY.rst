@@ -7,6 +7,7 @@ Pending Release
 ---------------
 
 * New release notes here
+* Now always returns ``unicode`` on Python 2 for consistency.
 
 1.0.2 (2016-05-03)
 ------------------

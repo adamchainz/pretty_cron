@@ -19,7 +19,7 @@ Use pip:
 
     pip install pretty-cron
 
-Tested on Python 2.7, 3.4, 3.5, and PyPy (Python 2).
+Tested on Python 2.7 and 3.6.
 
 API
 ===

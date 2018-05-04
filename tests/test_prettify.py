@@ -1,6 +1,8 @@
 # -*- encoding:utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import pytest
+
 from pretty_cron import prettify_cron as pc
 
 
@@ -173,3 +175,17 @@ def test_invalid_unchanged():
 
 def test_nonsense_unchanged():
     assert pc('Lalalala') == 'Lalalala'
+
+
+# Tests for "step values" in crontabs...
+@pytest.mark.parametrize('crontab,result', [
+    ('4/21 * * * *', 'Every 21st minute from 4 through 59 every day'),
+    ('0/30 3 * * *', 'Every 30th minute from 0 through 59 past hour 3 every day'),
+    ('10-50/15 * * * 7', 'Every 15th minute from 10 through 50 every Sunday'),
+    ('2-46/11 * * * *', 'Every 11th minute from 2 through 46 every day'),
+    ('* 2-6/2 * * *', 'Every minute of every 2nd hour from 2 through 6 every day'),
+    ('0 2-6/2 * * *', 'At the start of every 2nd hour from 2 through 6 every day'),
+    ('17 2-6/2 * * *', 'Every 17th minute of every 2nd hour from 2 through 6 every day'),
+])
+def test_step_values_mins_hours(crontab, result):
+    assert pc(crontab) == result

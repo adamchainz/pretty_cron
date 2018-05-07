@@ -189,3 +189,8 @@ def test_nonsense_unchanged():
 ])
 def test_step_values_mins_hours(crontab, result):
     assert pc(crontab) == result
+
+
+def test_step_values_for_mins_and_hours_raises():
+    with pytest.raises(ValueError):
+        pc('0/30 4/10 * * *')

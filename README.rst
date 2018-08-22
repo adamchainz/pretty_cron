@@ -2,11 +2,11 @@
 pretty-cron
 ===========
 
-.. image:: https://img.shields.io/travis/adamchainz/pretty-cron/master.svg
-        :target: https://travis-ci.org/adamchainz/pretty-cron
+**Retired** in favour of cron_descriptor_
 
-.. image:: https://img.shields.io/pypi/v/pretty-cron.svg
-        :target: https://pypi.python.org/pypi/pretty-cron
+.. cron_descriptor_: https://pypi.org/project/cron_descriptor/
+
+**This project is no longer maintained.**
 
 Converts crontab expressions to human-readable descriptions.
 

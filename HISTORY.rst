@@ -6,7 +6,9 @@ History
 Pending Release
 ---------------
 
-* New release notes here
+* **Retired** in favour of cron_descriptor_. This project is no longer maintained.
+
+.. _cron_descriptor: https://pypi.org/project/cron_descriptor/
 
 1.1.0 (2018-08-19)
 ------------------

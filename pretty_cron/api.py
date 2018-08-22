@@ -2,6 +2,17 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import datetime
+import re
+
+# regex to detect cron step expressions, such as 5-30/10 = "every 10 from 5 through 30"
+step_pattern = re.compile(r'^(?P<start>\d{1,2})(?:-(?P<end>\d{1,2}))?/(?P<step>\d{1,2})$')
+
+# regex to capture various crontab tokens
+cron_pattern = re.compile(r'^(?P<fullexpr>(?P<allexpr>\*)'
+                          r'|(?P<valexpr>\d{1,2})'
+                          r'|(?P<rangeexpr>(?P<from>\d{1,2})-(?P<to>\d{1,2}))'
+                          r'|(?P<stepexpr>(?P<start>\d{1,2})(?:-(?P<end>\d{1,2}))?/(?P<step>\d{1,2}))'
+                          r'|(?P<listexpr>\d{1,2}(?:,\d{1,2})+))$')
 
 
 def prettify_cron(expression):
@@ -21,7 +32,7 @@ def prettify_cron(expression):
                 # non-integers in comma-separated list aren't supported yet -
                 # return as-is
                 return expression
-        elif piece != '*':
+        elif piece != '*' and not (step_pattern.match(piece) and i in (0, 1)):
             try:
                 piece = int(piece)
             except ValueError:
@@ -157,7 +168,46 @@ def _ordinal(num):
     return _human_list(ordinal_days)
 
 
+def _pretty_time_with_steps(minute, hour):
+    if minute['stepexpr']:
+        start = int(minute['start'])
+        end = int(minute['end'] or 59)
+        step = _ordinal(int(minute['step']))
+
+        hour_expr = ""
+        if hour['allexpr'] != '*':
+            hour_expr = " past hour {0}".format(hour['valexpr'])
+        return "Every {step} minute from {m_start} through {m_end}{hour_expr}".format(
+            step=step,
+            m_start=start,
+            m_end=end,
+            hour_expr=hour_expr)
+
+    start = int(hour['start'])
+    end = int(hour['end'] or 23)
+    step = _ordinal(int(hour['step']))
+
+    if minute['allexpr']:
+        min_expr = "Every minute"
+    else:
+        minval = int(minute['valexpr'])
+        min_expr = "Every {0} minute".format(_ordinal(minval)) if minval != 0 else "At the start"
+    return "{min_expr} of every {step} hour from {m_start} through {m_end}".format(
+        step=step,
+        m_start=start,
+        m_end=end,
+        min_expr=min_expr)
+
+
 def _pretty_time(minute, hour):
+    min_groups, hour_groups = (m and m.groupdict() for m in (cron_pattern.match(str(p)) for p in (minute, hour)))
+    # see if either the min or hour are a step expression
+    step_count = sum(bool(g['stepexpr']) for g in (min_groups, hour_groups))
+    if step_count > 0:
+        if step_count == 2:
+            raise ValueError('Step expressions only work for either minutes or hours, but not both at this time.')
+        return _pretty_time_with_steps(min_groups, hour_groups)
+
     if minute != "*" and hour != "*":
         the_time = datetime.time(hour=hour, minute=minute)
         pretty_time = "At {0}".format(the_time.strftime("%H:%M"))

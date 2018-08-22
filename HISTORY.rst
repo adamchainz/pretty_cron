@@ -3,8 +3,8 @@
 History
 -------
 
-Pending Release
----------------
+1.2.0 (2018-08-22)
+------------------
 
 * **Retired** in favour of cron_descriptor_. This project is no longer maintained.
 

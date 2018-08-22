@@ -27,7 +27,7 @@ with codecs.open('HISTORY.rst', 'r', 'utf-8') as history_file:
 setup(
     name='pretty-cron',
     version=version,
-    description="Converts crontab expressions to human-readable descriptions.",
+    description="Retired in favour of cron_descriptor. (Converts crontab expressions to human-readable descriptions).",
     long_description=readme + '\n\n' + history,
     author="Adam Johnson",
     author_email='me@adamj.eu',
@@ -40,7 +40,7 @@ setup(
     zip_safe=False,
     keywords='cron',
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 7 - Inactive',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',

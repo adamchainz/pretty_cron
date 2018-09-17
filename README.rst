@@ -2,9 +2,7 @@
 pretty-cron
 ===========
 
-**Retired** in favour of cron_descriptor_
-
-.. cron_descriptor_: https://pypi.org/project/cron_descriptor/
+**Retired** in favour of `cron_descriptor <https://pypi.org/project/cron_descriptor/>`_.
 
 **This project is no longer maintained.**
 
